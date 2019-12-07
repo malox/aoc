@@ -48,6 +48,15 @@ public:
    }
 };
 
+void msort(size_t idx, size_t end, std::vector<point_t>& vect)
+{
+    std::nth_element(&vect[idx], &vect[(idx+end)/2], &vect[end]);
+    if(end-idx >3)
+    {
+        msort( idx, (idx+end)/2 , vect );
+        msort( ((idx+end)/2)+1, end, vect );
+    }
+}
 
 void t_main(const std::string& fname)
 {
@@ -72,14 +81,38 @@ void t_main(const std::string& fname)
   //gb.dump();
 
   std::cout << "--" << std::endl;
+  msort(0, ga._points.size()-1, ga._points);
+  msort(0, gb._points.size()-1, gb._points);
 
   std::vector<point_t> result;
-  for(const point_t& p : ga._points)
-      for(const point_t& q : gb._points)
-          if(std::get<0>(p)==std::get<0>(q) &&std::get<1>(p)==std::get<1>(q)
-      && std::get<0>(p)!=0 &&std::get<1>(p)!=0)
-              result.emplace_back(std::get<0>(p), std::get<1>(p), std::get<2>(p) + std::get<2>(q));
-  
+//  for(const point_t& p : ga._points)
+//      for(const point_t& q : gb._points)
+//          if(std::get<0>(p)==std::get<0>(q) &&std::get<1>(p)==std::get<1>(q)
+//      && std::get<0>(p)!=0 &&std::get<1>(p)!=0)
+//              result.emplace_back(std::get<0>(p), std::get<1>(p), std::get<2>(p) + std::get<2>(q));
+
+   auto first1 = ga._points.begin();
+   auto first2 = gb._points.begin();
+   auto last1 = ga._points.end();
+   auto last2 = gb._points.end();
+   while (first1 != last1 && first2 != last2)
+   {
+       if (std::get<0>(*first1)==0 && std::get<1>(*first1)==0) ++first1;
+       if (std::get<0>(*first2)==0 && std::get<1>(*first2)==0) ++first2;
+   
+       if(std::get<0>(*first1)==std::get<0>(*first2) && std::get<1>(*first1)==std::get<1>(*first2))
+       {
+            result.emplace_back(std::get<0>(*first1), std::get<1>(*first1), std::get<2>(*first1) + std::get<2>(*first2));   
+            ++first1;
+            ++first2;
+       }
+       else if (*first1 < *first2) {
+           ++first1;
+       } else  {
+           ++first2;
+       }
+    }
+
   int best=1234567890;
   int steps = best;
   for(const point_t& p : result) {
