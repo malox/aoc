@@ -1,4 +1,4 @@
 export GOPATH=`pwd`
-export GOBIN=`pwd`/bin
+export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
-mkdir `pwd`/bin
+mkdir $GOBIN 2> /dev/null 
