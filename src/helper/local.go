@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func openFile() *bufio.Scanner {
+func OpenFile() *bufio.Scanner {
 
 	fptr := flag.String("fp", "test", "file path to read from")
 	flag.Parse()
@@ -30,7 +30,7 @@ func openFile() *bufio.Scanner {
 
 func FileAsIntList() []int64 {
 
-	fs := openFile()
+	fs := OpenFile()
 
 	arr := []int64{}
 	for fs.Scan() {
@@ -50,7 +50,7 @@ func FileAsIntList() []int64 {
 
 func FileAsStringList() []string {
 
-	fs := openFile()
+	fs := OpenFile()
 
 	arr := []string{}
 	for fs.Scan() {
@@ -78,7 +78,7 @@ func addPassport(arr *[]string, passport *string) {
 
 func FileAsPassportList() []string {
 
-	fs := openFile()
+	fs := OpenFile()
 
 	arr := []string{}
 
