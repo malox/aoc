@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+bin/
+pkg/
+src/github.com/
+src/golang.org/
+
