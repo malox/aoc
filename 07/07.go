@@ -5,7 +5,6 @@ import (
 	helper "helper"
 	"strconv"
 	"strings"
-	//"strings"
 )
 
 type bag struct {
@@ -88,12 +87,12 @@ func main() {
 				continue
 			}
 			curr := strings.Split(tmpbags[i], " ")
-			count, _ := strconv.ParseInt(curr[0], 10, 0)
+			count, _ := strconv.Atoi(curr[0])
 			currbag := curr[1] + " " + curr[2]
 			currbagit := getBag(currbag, &bags)
 
 			currbagit.ParentBags[bagone] = getBagHolder(&bagit, 0)
-			bagit.ChildBags[currbag] = getBagHolder(&currbagit, int(count))
+			bagit.ChildBags[currbag] = getBagHolder(&currbagit, count)
 
 		}
 	}
