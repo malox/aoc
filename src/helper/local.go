@@ -28,13 +28,13 @@ func OpenFile() *bufio.Scanner {
 	return bufio.NewScanner(f)
 }
 
-func FileAsIntList() []int64 {
+func FileAsIntList() []int {
 
 	fs := OpenFile()
 
-	arr := []int64{}
+	arr := []int{}
 	for fs.Scan() {
-		if i, err := strconv.ParseInt(fs.Text(), 10, 0); err == nil {
+		if i, err := strconv.Atoi(fs.Text()); err == nil {
 			arr = append(arr, i)
 			// fmt.Println(i)
 		}
