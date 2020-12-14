@@ -8,12 +8,16 @@ import (
 
 // -----------------------------------------------------------------
 
+func getKdx(idx int, jdx int, cols int) int {
+	return idx*cols + jdx
+}
+
 func dump(rows int, cols int, matrix *string) {
 	fmt.Println(strings.Repeat("-", cols))
 	for idx := 0; idx < rows; idx++ {
 		for jdx := 0; jdx < cols; jdx++ {
-			kdx := idx*cols + jdx
-			fmt.Printf("%c", (*matrix)[kdx])
+			kdx := getKdx(idx, jdx, cols)
+			fmt.Printf("%c ", (*matrix)[kdx])
 		}
 		fmt.Printf("\n")
 	}
@@ -34,7 +38,7 @@ func occupy(x int, y int, rows int, cols int, matrix *string) int {
 			if x == idx && y == jdx {
 				continue
 			}
-			kdx := idx*cols + jdx
+			kdx := getKdx(idx, jdx, cols)
 			if (*matrix)[kdx] == '#' {
 				seats++
 			}
@@ -52,7 +56,7 @@ func parseOne(rows int, cols int, matrix string) {
 		matrix = ""
 		for idx := 0; idx < rows; idx++ {
 			for jdx := 0; jdx < cols; jdx++ {
-				kdx := idx*cols + jdx
+				kdx := getKdx(idx, jdx, cols)
 				seat := oldmatrix[kdx]
 				busy := occupy(idx, jdx, rows, cols, &oldmatrix)
 				if seat != '.' && busy == 0 {
@@ -72,28 +76,56 @@ func parseOne(rows int, cols int, matrix string) {
 
 }
 
-func parseOneBis(rows int, cols int, matrix string) {
+// -----------------------------------------------------------------
 
-	oldmatrix := ""
-	for matrix != oldmatrix {
-		oldmatrix = matrix
-		for idx := 0; idx < rows; idx++ {
-			for jdx := 0; jdx < cols; jdx++ {
-				kdx := idx*cols + jdx
-				seat := matrix[kdx]
-				busy := occupy(idx, jdx, rows, cols, &matrix)
-				if seat == 'L' && busy == 0 {
-					matrix = matrix[:kdx] + "#" + matrix[kdx+1:]
-				} else if seat == '#' && busy >= 4 {
-					matrix = matrix[:kdx] + "L" + matrix[kdx+1:]
-				}
+// https://www.geeksforgeeks.org/program-to-print-the-diagonals-of-a-matrix/
+// https://www.geeksforgeeks.org/n-queen-problem-backtracking-3/?ref=lbp
+// https://www.geeksforgeeks.org/print-matrix-diagonal-pattern/?ref=lbp
+
+func drawSlopesX(x int, y int, rows int, cols int, matrix string) {
+	kdx := 0
+	newmatrix := matrix
+
+	chars := []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"}
+	for idx := 0; idx+x < rows; idx++ {
+		for cdx := 0; cdx < cols; cdx++ {
+			for jdx := 0; jdx+y < cols; jdx += 1 + cdx*idx {
+				kdx = getKdx(idx+x, jdx+y, cols)
+				newmatrix = newmatrix[:kdx] + chars[cdx] + newmatrix[kdx+1:]
 			}
 		}
-		dump(rows, cols, &matrix)
 	}
+	kdx = getKdx(x, y, cols)
+	newmatrix = newmatrix[:kdx] + "X" + newmatrix[kdx+1:]
+	dump(rows, cols, &newmatrix)
+}
 
-	fmt.Println("parseOne - occupied seats ", strings.Count(matrix, "#"))
+func drawSlopes(x int, y int, rows int, cols int, matrix string) {
+	kdx := 0
+	newmatrix := matrix
 
+	chars := []string{"1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"}
+	for cdx := 0; cdx < cols; cdx++ {
+		for idx := 0; idx+x < rows; idx++ {
+			for jdx := 0; jdx+y < cols; jdx += idx + cdx*idx {
+				kdx = getKdx(idx+x, jdx+y, cols)
+				newmatrix = newmatrix[:kdx] + chars[cdx] + newmatrix[kdx+1:]
+			}
+		}
+	}
+	kdx = getKdx(x, y, cols)
+	newmatrix = newmatrix[:kdx] + "X" + newmatrix[kdx+1:]
+	dump(rows, cols, &newmatrix)
+}
+
+func parseTwo(rows int, cols int, matrix string) {
+	for idx := 0; idx < rows; idx++ {
+		for jdx := 0; jdx < cols; jdx++ {
+			drawSlopes(idx, jdx, rows, cols, matrix)
+			break
+		}
+		break
+	}
 }
 
 // -----------------------------------------------------------------
@@ -109,7 +141,7 @@ func parse(lines []string) {
 	cols := len(matrix) / rows
 
 	parseOne(rows, cols, matrix)
-	// parseOneBis(rows, cols, matrix)
+	parseTwo(rows, cols, matrix)
 
 	fmt.Println("rows ", rows, " - cols ", cols)
 	// dump(rows, cols, &matrix)

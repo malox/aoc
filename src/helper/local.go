@@ -106,3 +106,8 @@ func FileAsPassportList() []string {
 
 	return arr
 }
+
+func Atoi64(x string) (int64, error) {
+	tmp, err := strconv.Atoi(x)
+	return int64(tmp), err
+}
