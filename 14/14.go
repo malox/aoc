@@ -81,8 +81,8 @@ func parse(lines []string, resetter maskResetter, applier maskApplier) {
 	var masks []string
 	mem := map[int64]int64{}
 
-	for idx := range lines {
-		curr := strings.Split(lines[idx], " = ")
+	for _, line := range lines {
+		curr := strings.Split(line, " = ")
 		if curr[0] == "mask" {
 			masks = []string{}
 			resetter(curr[1], &masks)
@@ -90,8 +90,8 @@ func parse(lines []string, resetter maskResetter, applier maskApplier) {
 		} else {
 			var memidx int64
 			var value int64
-			fmt.Sscanf(lines[idx], "mem[%d] = %d", &memidx, &value)
-			applier(memidx, value, &(lines[idx]), &masks, &mem)
+			fmt.Sscanf(line, "mem[%d] = %d", &memidx, &value)
+			applier(memidx, value, &(line), &masks, &mem)
 		}
 	}
 

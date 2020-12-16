@@ -34,8 +34,8 @@ func parse(arr []int, stop int) {
 	round := 1
 	var spoken int
 
-	for idx := range arr {
-		spoken := arr[idx]
+	for _, val := range arr {
+		spoken := val
 		updateHist(&hist, spoken, round)
 		// fmt.Println("init - round ", round, " - spoken ", spoken)
 		round++
