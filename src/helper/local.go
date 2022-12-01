@@ -70,6 +70,31 @@ func FileAsStringList() []string {
 	return arr
 }
 
+func FileAsDoubleStringList() ([]string, []string) {
+
+	fs := OpenFile()
+
+	arr := []string{}
+	arr2 := []string{}
+	rules := true
+	for fs.Scan() {
+		if len(fs.Text()) == 0 {
+			rules = false
+		} else if rules {
+			arr = append(arr, fs.Text())
+		} else {
+			arr2 = append(arr2, fs.Text())
+		}
+	}
+
+	err := fs.Err()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return arr, arr2
+}
+
 func addPassport(arr *[]string, passport *string) {
 	//fmt.Println("Adding passport : " + *passport + "\n")
 	*arr = append(*arr, *passport)
